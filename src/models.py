@@ -23,6 +23,7 @@ class Character(Base):
     gender = Column(String(250), nullable=False)
     created = Column(String(250), nullable=False)
     edited = Column(String(250), nullable=False)
+    like_user = db.relationship("FavoritesCharacter",backref="character")
 
 class Planets(Base):
     __tablename__ = 'Planet'
@@ -39,6 +40,7 @@ class Planets(Base):
     terrain = Column(String(250), nullable=False)
     created = Column(String(250), nullable=False)
     edited = Column(String(250), nullable=False)
+    like_user = db.relationship("FavoritePlanet",backref="planet")
 
 class FavoriteCharacter(Base):
     __tablename__ = 'Favorite_Character'
@@ -46,8 +48,8 @@ class FavoriteCharacter(Base):
     # Notice that each column is also a normal Python instance attribute.
     
     id = Column(Integer, primary_key=True)
-    username_id = Column(Integer, ForeignKey('User.id'))
-    character_id = Column(Integer, ForeignKey('Character.id'))
+    username_id = Column(Integer, ForeignKey('user.id'))
+    character_id = Column(Integer, ForeignKey('character.id'))
 
 class FavoritePlanet(Base):
     __tablename__ = 'Favorite_Planet'
@@ -55,14 +57,16 @@ class FavoritePlanet(Base):
     # Notice that each column is also a normal Python instance attribute.
     
     id = Column(Integer, primary_key=True)
-    username_id = Column(Integer, ForeignKey('User.id'))
-    planet_id = Column(Integer, ForeignKey('Planet.id'))
+    username_id = Column(Integer, ForeignKey('user.id'))
+    planet_id = Column(Integer, ForeignKey('planet.id'))
 
 class User(Base):
     __tablename__='User'
     id = Column(Integer, primary_key=True)
     username = Column(Integer, nullable=False)
     password = Column(Integer, nullable=False)
+    fav_character = db.relationship('FavoriteCharacter',backref="user") #RELATION WITH FAVORITE ChARCTERS
+    fav_planet = db.relationship('FavoritePlanet',backref="planet")     #RELATION WITH FAVORITE PLANETS
 
     def to_dict(self):
         return {}
